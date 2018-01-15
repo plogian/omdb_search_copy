@@ -1,0 +1,1 @@
+Use this GUI to generate a SQL query for a movie database
