@@ -1,5 +1,20 @@
+body {
+  font-family: 'Roboto', sans-serif !important;
+}
+
 ul {
   list-style: none;  
+}
+
+h2 {
+  margin-top: 100px;
+  text-align: center;
+  font-size: 30px;
+  color: darkgrey;
+}
+
+strong {
+  color:  #84c7c1;
 }
 
 .checkbox_grid li{
@@ -14,10 +29,6 @@ ul {
     width: 10%;
 }
 
-.green {
-    color: #589958;
-    font-weight: bold;
-}
 
 span {
     display: inline-block;
@@ -25,6 +36,11 @@ span {
 
 .inner-remaining {
     display: table-row; 
+}
+
+#type_overview {
+  margin-top: 80px;
+  margin-bottom: 20px;
 }
 
 #actors_row {
@@ -47,6 +63,15 @@ span {
 
 .page-item > * {
     border: none;
+}
+
+input[type="text"] {
+  width: 200px;
+  margin-left: 5px;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
 }
 
 .custom-checkbox {
@@ -101,7 +126,39 @@ span {
       opacity:0;
   }
 
+.country, .green, .language {
+  padding: 3px;
+  margin: 0 0 2px 2px;
+  border: 2px solid #84c7c1;
+  cursor: pointer;
+}
+
+#country_list, #language_list {
+  height: 80px;
+  margin-top: 10px;
+  width: 250px;
+
+}
+
+#country_list::-webkit-scrollbar, #language_list::-webkit-scrollbar{
+    width: 2em;
+}
  
+#country_list::-webkit-scrollbar-track, #language_list::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+ 
+#country_list::-webkit-scrollbar-thumb, #language_list::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+#countries_selected, #languages_selected {
+  display: inline; 
+  margin-left: 10px; 
+  vertical-align: top;
+}
+
  td {
      height: 80px;
  }
@@ -117,9 +174,13 @@ span {
 #rotten_tomato_content{
      vertical-align: middle;
  }
- 
+
+ /*#limit {
+  margin: 20px;
+ }
+ */
  .label_off {
-   display: none;
+   opacity: 0.2;
  }
  
  
@@ -138,6 +199,7 @@ span {
  
 .generate_section {
     text-align: center;
+    margin: 20px;
 }
 
 .results_page{
@@ -146,39 +208,3 @@ span {
     text-align: center;
 }
 
-/* The alert message box */
-.alert {
-    padding: 20px;
-    background-color: #2196F3;
-    color: white;
-    margin-bottom: 15px;
-}
-
-/* The close button */
-.closebtn {
-    margin-left: 15px;
-    color: white;
-    font-weight: bold;
-    float: right;
-    font-size: 22px;
-    line-height: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-/* When moving the mouse over the close button */
-.closebtn:hover {
-    color: black;
-}
-
-.alert a {
-  color: white;
-  font-weight: bold;
-  text-decoration: underline;
-  font-size: 1em;
-}
-
-.alert a:hover, .alert a:focus, .alert a:visited, .alert a:active {
-  color: white;
-  font-size: 1.2em;
-}

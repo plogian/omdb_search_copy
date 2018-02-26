@@ -3,64 +3,52 @@ setTimeout(function() {
                 
         // submit button
         var submit = document.querySelector("#generate_query");
-                
-        // Selecting inputs for SQL query
-        // If time, clean up movie/show/episode code 
-        var movie_label = document.querySelector("#movies");
-        var show_label = document.querySelector("#shows");
-        var episode_label = document.querySelector("#episodes");
-        var type_movie = document.querySelector("#type_movie");
-        var type_tvshow = document.querySelector("#type_tvshow");
-        var type_episode = document.querySelector("#type_episode");
-        var type_query_start = "type IN (";
+            
+        // county and language lists
         var country_list = document.querySelector("#country_list");
         var language_list = document.querySelector("#language_list");
-        var type_movie_query = "'movie'";
-        var type_show_query = "'series'";
-        var type_episode_query = "'episodes'";
+        var countries_selected = document.querySelector("#countries_selected");
+        var languages_selected = document.querySelector("#languages_selected");
+
+        // types (movies, series, episodes, games)       
+        var type_overview = document.querySelector("#type_overview")
+
+        // row types
         var qualifier_list_row = document.querySelectorAll(".qualifier_with_list");
         var checkbox_row = document.querySelectorAll(".checkbox_input");
-        var generated_query = document.querySelector("#generated_query");
         var number_row = document.querySelectorAll(".number_row");
         var date_row = document.querySelectorAll(".date_row");
+
+        //currency tyep
+        var currency_type = document.querySelector("#currency_q_1");
+
+        // generate section
         var generate_section = document.querySelectorAll(".generate_section");
         var order_by = document.querySelector("#order_by");
-        var send_query = document.querySelector("#send_query");
+        var limit = document.querySelector("#limit");
+        var generated_query = document.querySelector("#generated_query");
         
-        type_movie.addEventListener( 'change', function() {
-                if(this.checked) {
-                        // Checkbox is checked..
-                        type_movie_query = "'movie'";
-                        movie_label.classList.toggle("label_off");
-                } else {
-                        type_movie_query = "";
-                        movie_label.classList.toggle("label_off");
-            }
+        // dynamically display types to search for
+        // can't do in loop- because of closures? There must be a way though
+        type_overview.children[0].addEventListener("click", function() {
+            type_overview.children[0].classList.toggle("label_off")
         });
-        
-        type_tvshow.addEventListener( 'change', function() {
-            if(this.checked) {
-                // Checkbox is checked..
-                type_show_query = "'series'";
-                show_label.classList.toggle("label_off");
-            } else {
-                type_show_query = "";
-                show_label.classList.toggle("label_off");
-            }
+
+        type_overview.children[1].addEventListener("click", function() {
+            type_overview.children[1].classList.toggle("label_off")
         });
-        
-        type_episode.addEventListener( 'change', function() {
-            if(this.checked) {
-                // Checkbox is checked..
-                type_episode_query = "'episode'";
-                episode_label.classList.toggle("label_off");
-            } else {
-                // Checkbox is not checked..
-                type_episode_query = "";
-                episode_label.classList.toggle("label_off");
-            }
+
+        type_overview.children[2].addEventListener("click", function() {
+            type_overview.children[2].classList.toggle("label_off")
         });
+
+        type_overview.children[3].addEventListener("click", function() {
+            type_overview.children[3].classList.toggle("label_off")
+        });
+
+
         
+        // control which rows and row elements are and are not visible
         table.addEventListener('change', function() {
                 // turn rows and content on/off when the switch is pressed
                 for (var i = 0; i < table.childElementCount; i++) {
@@ -74,13 +62,55 @@ setTimeout(function() {
                 }
                 // turn between spans on/off for number rows when relevant
                 for(var i=0; i < table.querySelectorAll(".number_row").length; i++) {
-                        if(table.querySelectorAll(".number_row")[i].children[2].children[0].value == "BETWEEN ") {
-                                table.querySelectorAll(".number_row")[i].children[2].children[2].classList.remove("content_off");
+                    if(i==0) {
+                        if (table.querySelectorAll(".number_row")[i].children[2].children[0].value == "BETWEEN ") {
+                            table.querySelectorAll(".number_row")[i].children[2].children[3].classList.remove("content_off");
                         } else {
-                               table.querySelectorAll(".number_row")[i].children[2].children[2].classList.add("content_off") 
+                            table.querySelectorAll(".number_row")[i].children[2].children[3].classList.add("content_off") 
                         }
+                    } else if (table.querySelectorAll(".number_row")[i].children[2].children[0].value == "BETWEEN ") {
+                        table.querySelectorAll(".number_row")[i].children[2].children[2].classList.remove("content_off");
+                    } else {
+                        table.querySelectorAll(".number_row")[i].children[2].children[2].classList.add("content_off") 
+                    }
                 }
+
+                // turn between spans on/off for date rows when relevant
+                for(var i=0; i < table.querySelectorAll(".date_row").length; i++) {
+                    if (table.querySelectorAll(".date_row")[i].children[2].children[0].value == "BETWEEN ") {
+                        table.querySelectorAll(".date_row")[i].children[2].children[2].classList.remove("content_off");
+                    } else {
+                        table.querySelectorAll(".date_row")[i].children[2].children[2].classList.add("content_off") 
+                    }
+                }
+
         });
+
+        // Make the country selection easier
+        for(var i=0; i < country_list.childElementCount; i++) {
+            country_list[i].addEventListener("click", function(i) {
+                var newHTML = "<span class='country' style='display: inline;'>".concat(i.toElement.innerHTML, "</span>")
+                countries_selected.innerHTML += newHTML
+                for(var j =0; j < countries_selected.childElementCount; j++) {
+                    countries_selected.children[j].addEventListener("click",countries_selected.children[j].remove)   
+                }
+            })
+        }
+
+        // Make the language selection easier
+        for(var i=0; i < language_list.childElementCount; i++) {
+            language_list[i].addEventListener("click", function(i) {
+                var newHTML = "<span class='language' style='display: inline;'>".concat(i.toElement.innerHTML, "</span>")
+                languages_selected.innerHTML += newHTML
+                for(var j =0; j < languages_selected.childElementCount; j++) {
+                    languages_selected.children[j].addEventListener("click",languages_selected.children[j].remove)   
+                }
+            })
+        }
+
+
+
+
         
         // After you click 'Generate query,' creates sql query text
         submit.addEventListener("click", function() {
@@ -127,7 +157,7 @@ setTimeout(function() {
                                         }
                                 }
                                 var query_mid = selection_arr.join(query_connector);
-                                var query_end = "%')) AND"
+                                var query_end = "%'))  AND"
                                 var query_whole = query_start.concat(query_mid, query_end);
                                 checkbox_row_queries.push(query_whole);  
                         }
@@ -135,11 +165,18 @@ setTimeout(function() {
                 };
                 var checkbox_row_query= checkbox_row_queries.join(" ");
         
-                // type (movie/show/episode) query text
-                // this is commented out for now, since the type column is missing
-                // var type_query_mid = [type_movie_query, type_show_query, type_episode_query].filter(function (val) {return val;}).join(', ');
-                // var type_query_whole = type_query_start.concat(type_query_mid, ") AND ");
-                var type_query_whole = "";
+                //type (movie/show/episode) query text
+                var type_query_start = "type IN ('"
+                var types_selected = []
+
+                for(var i =0; i< type_overview.childElementCount; i++) {
+                    if(!type_overview.children[i].classList.contains("label_off")) {
+                        types_selected.push(type_overview.children[i].id)
+                    }
+                }
+
+                var type_query_mid = types_selected.join("', '")
+                var type_query_whole = type_query_start.concat(type_query_mid, "') AND ");
                 
                 // number row queries
                 var number_row_queries = [];
@@ -162,6 +199,14 @@ setTimeout(function() {
                 }
                 var number_row_query= number_row_queries.join(" ");
                 
+                // currency type query -> only if box office is checked
+                var currency_type_query = "";
+                if(number_row[0].querySelector(".custom-control-input").checked) {
+                    var currency_type_query_start = "currencyType IN ('"
+
+                    currency_type_query = currency_type_query_start.concat(currency_type.selectedOptions[0].value, "') AND ");
+                };
+
                 //date queries
                 var date_row_queries = [];
                 for(var i=0; i<date_row.length; i++) {
@@ -188,10 +233,9 @@ setTimeout(function() {
                 if(country_row.querySelector(".custom-control-input").checked) {
                         var country_query_start = "(Country LIKE ('%"
                         var country_connector = "%') OR Country LIKE ('%";
-                        var country_amount = country_list.selectedOptions.length
                         var country_arr = [];
-                        for(var i=0; i<country_amount; i++) {
-                                country_arr.push(country_list.selectedOptions[i].innerText);
+                        for(var i=0; i<countries_selected.childElementCount; i++) {
+                                country_arr.push(countries_selected.children[i].innerText);
                         }
                         var country_query_mid = country_arr.join(country_connector);
                         var country_query_end = "%')) AND "
@@ -200,32 +244,37 @@ setTimeout(function() {
                         country_query_whole = ""
                 }
                 
-                var language_row = document.querySelector("#Language")
+                var language_row = document.querySelector("#Language");
                 if(language_row.querySelector(".custom-control-input").checked) {
                         var language_query_start = "(Language LIKE ('%"
                         var language_connector = "%') OR Language LIKE ('%";
-                        var language_amount = language_list.selectedOptions.length
                         var language_arr = [];
-                        for(var i=0; i<language_amount; i++) {
-                                language_arr.push(language_list.selectedOptions[i].innerText);
+                        for(var i=0; i<languages_selected.childElementCount; i++) {
+                                language_arr.push(languages_selected.children[i].innerText);
                         }
                         var language_query_mid = language_arr.join(language_connector);
                         var language_query_end = "%')) AND "
-                        var language_query_whole = language_query_start.concat(language_query_mid, language_query_end); 
+                        var language_query_whole = language_query_start.concat(language_query_mid, language_query_end);
                 } else {
                         language_query_whole = ""
                 }
+
                      
-                var final_q = "SELECT * FROM omdbunique WHERE ".concat(type_query_whole, qualifier_row_query, date_row_query, checkbox_row_query, number_row_query, country_query_whole,  language_query_whole);
+                var final_q = "SELECT * FROM omdb WHERE ".concat(type_query_whole, qualifier_row_query, date_row_query, checkbox_row_query, number_row_query, country_query_whole, language_query_whole, currency_type_query);
                 // remove the last "AND"
-                final_q = final_q.slice(0, -4);
-                
+                if(final_q.length>25) {
+                    final_q = final_q.slice(0, -4);
+                } else {
+                    final_q = final_q.slice(0, -7);
+                }
+
                 if(order_by.value.length>0) {
                         final_q= final_q.concat(" ORDER BY ", order_by.value);
                 }
-                console.log(final_q);
+
+                final_q = final_q.concat("LIMIT ", limit.value);
                 
-                generate_section[2].classList.remove("content_off");
+                generate_section[3].classList.remove("content_off");
                 generated_query.value = final_q;
         
 }), 1000})

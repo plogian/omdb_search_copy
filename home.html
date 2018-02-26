@@ -2,775 +2,768 @@
 <html>
   <head>
     <title>OMDB Search</title>
-    <link rel="stylesheet" href="app.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/app.css">
+    <script src="/main.js" type="text/javascript" async defer></script>
 
-    <script src="main.js" type="text/javascript" async defer></script>
   </head>
-    <body>
+    <body>    
         <div class="alert">
-          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-          Use this advanced search to generate a complex SQL query! <br/><br/>The full project is password protected for a current client.
-          To see more of my work, visit <a href="http://www.lillianpodlog.com">lillianpodlog.com</a>
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+            Use this advanced search to generate a complex SQL query! <br/><br/>The full project is password protected for a current client.
+            To see more of my work, visit <a href="http://www.lillianpodlog.com">lillianpodlog.com</a>
         </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <p class="lead">We have <strong>3.5 million</strong> movies in our database.</p>
-          </div>
-        </div>
-        <form>
-        <div class="row">
-          <fieldset>
-            <div class="col-md-12">
-                <legend> I am looking for: <span id="movies" class="green">movies,</span> <span id="shows" class="green">tv shows,</span> <span id="episodes" class="green">episodes</span></legend>  
-                <ul>
-                  <li>
-                    <input type='checkbox' name='movie' value='movie' label="movies" id="type_movie" checked>Movies</input>
-                  </li>
-                  <li>
-                    <input type='checkbox' name='show' value='show' label="tv shows" id="type_tvshow" checked>TV Shows</input>
-                  </li>
-                  <li>
-                    <input type='checkbox' name='any' value='episodes' label="episodes" id="type_episode" checked>Episodes</input>
-                  </li>              
-                </ul>
+        <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <h2>We have <strong><%= count%></strong> movies in our database.</h2>
+              </div>
             </div>
-          </fieldset>
-        </div>
-        <br/>
-        <fieldset>
-          <div class="row">
-            <div class="col-md-12">
-              <legend>With the following parameters:</legend>
+            <div class="row">
+                    <div class="col-md-12">
+                        <legend id="type_overview"> I am looking for: <span id="movie" class="green">movies,</span> <span id="series" class="green">series,</span> <span id="episode" class="green">episodes,</span> <span id="game" class="green">games</span> with the following parameters: </legend>  
+                    </div>
             </div>
-          </div>
-          <table class="table  table-sm">
-            <thead class="table-info">
-                <tr>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="off qualifier_with_list" id="Actors">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="actor_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="actor_label">Actors</td>
-                    <td id="actor_content" class="content_off">
-                      CONTAINS
-                      <select name="actor_q_1" class="q_1">
-                        <option value="all" label="all of">ALL OF</option>
-                        <option value="none" label="none of">NONE OF</option>
-                        <option value="any" label="any of">ANY OF</option>
-                      </select>
-                      THE FOLLOWING ACTORS
-                      <input type="text" id="actor_list_input" class="list_input"></input>
-                    </td>
-                </tr>
-                <tr class="off qualifier_with_list" id="Awards">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="award_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="award_label">Awards</td>
-                    <td id="award_content" class="content_off">
-                         HAS WON
-                        <select name="awards_q_1" class="q_1">
-                          <option value="all" label="all of">ALL OF</option>
-                          <option value="none" label="none of">NONE OF</option>
-                          <option value="any" label="any of">ANY OF</option>
-                        </select>
-                      THE FOLLOWING AWARDS
-                       <input id="award_list_input" class="list_input"></input>
-                    </td>
-                </tr>
-                <tr class="off number_row"  id="BoxOffice">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="box_office_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="box_office_label">Box Office Earnings</td>
-                    <td id="box_office_content" class="content_off">
-                      HAS EARNED
-                      <select name="box_office_q_1" id="box_office_q_1" class="q_1">
-                        <option value=">" label="more than">LESS THAN</option>
-                        <option value="<" label="less than">MORE THAN</option>
-                        <option value="BETWEEN " label="between">BETWEEN</option>
-                      </select>
-                      $ <input type="text" id="box_office_input_1" class="input_1"></input> <span id="box_office_between" class="content_off">AND $ <input type="text" id="box_office_input_2" class="input_2"></input></span>
-                    </td>
-                </tr>
-                <tr class="off multi-select" id="Country">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="country_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="country_label">Country</td>
-                    <td id="country_content" class="content_off">
-                      <select label="countries" id="country_list" multiple>
-                        	<option value="AF">Afghanistan</option>
-                        	<option value="AX">Aland Islands</option>
-                        	<option value="AL">Albania</option>
-                        	<option value="DZ">Algeria</option>
-                        	<option value="AS">American Samoa</option>
-                        	<option value="AD">Andorra</option>
-                        	<option value="AO">Angola</option>
-                        	<option value="AI">Anguilla</option>
-                        	<option value="AQ">Antarctica</option>
-                        	<option value="AG">Antigua and Barbuda</option>
-                        	<option value="AR">Argentina</option>
-                        	<option value="AM">Armenia</option>
-                        	<option value="AW">Aruba</option>
-                        	<option value="AU">Australia</option>
-                        	<option value="AT">Austria</option>
-                        	<option value="AZ">Azerbaijan</option>
-                        	<option value="BS">Bahamas</option>
-                        	<option value="BH">Bahrain</option>
-                        	<option value="BD">Bangladesh</option>
-                        	<option value="BB">Barbados</option>
-                        	<option value="BY">Belarus</option>
-                        	<option value="BE">Belgium</option>
-                        	<option value="BZ">Belize</option>
-                        	<option value="BJ">Benin</option>
-                        	<option value="BM">Bermuda</option>
-                        	<option value="BT">Bhutan</option>
-                        	<option value="BO">Bolivia</option>
-                        	<option value="BQ">Bonaire</option>
-                        	<option value="BA">Bosnia and Herzegovina</option>
-                        	<option value="BW">Botswana</option>
-                        	<option value="BV">Bouvet Island</option>
-                        	<option value="BR">Brazil</option>
-                        	<option value="IO">British Indian Ocean Territory</option>
-                        	<option value="BN">Brunei Darussalam</option>
-                        	<option value="BG">Bulgaria</option>
-                        	<option value="BF">Burkina Faso</option>
-                        	<option value="BI">Burundi</option>
-                        	<option value="KH">Cambodia</option>
-                        	<option value="CM">Cameroon</option>
-                        	<option value="CA">Canada</option>
-                        	<option value="CV">Cape Verde</option>
-                        	<option value="KY">Cayman Islands</option>
-                        	<option value="CF">Central African Republic</option>
-                        	<option value="TD">Chad</option>
-                        	<option value="CL">Chile</option>
-                        	<option value="CN">China</option>
-                        	<option value="CX">Christmas Island</option>
-                        	<option value="CC">Cocos Islands</option>
-                        	<option value="CO">Colombia</option>
-                        	<option value="KM">Comoros</option>
-                        	<option value="CG">Congo</option>
-                        	<option value="CK">Cook Islands</option>
-                        	<option value="CR">Costa Rica</option>
-                        	<option value="CI">Cote d'Ivoire</option>
-                        	<option value="HR">Croatia</option>
-                        	<option value="CU">Cuba</option>
-                        	<option value="CW">Curaçao</option>
-                        	<option value="CY">Cyprus</option>
-                        	<option value="CZ">Czech Republic</option>
-                        	<option value="CD">Democratic Republic of the Congo</option>
-                        	<option value="DK">Denmark</option>
-                        	<option value="DJ">Djibouti</option>
-                        	<option value="DM">Dominica</option>
-                        	<option value="DO">Dominican Republic</option>
-                        	<option value="EC">Ecuador</option>
-                        	<option value="EG">Egypt</option>
-                        	<option value="SV">El Salvador</option>
-                        	<option value="GQ">Equatorial Guinea</option>
-                        	<option value="ER">Eritrea</option>
-                        	<option value="EE">Estonia</option>
-                        	<option value="ET">Ethiopia</option>
-                        	<option value="FK">Falkland Islands</option>
-                        	<option value="FO">Faroe Islands</option>
-                        	<option value="FJ">Fiji</option>
-                        	<option value="FI">Finland</option>
-                        	<option value="FR">France</option>
-                        	<option value="GF">French Guiana</option>
-                        	<option value="PF">French Polynesia</option>
-                        	<option value="TF">French Southern Territories</option>
-                        	<option value="GA">Gabon</option>
-                        	<option value="GM">Gambia</option>
-                        	<option value="GE">Georgia</option>
-                        	<option value="DE">Germany</option>
-                        	<option value="GH">Ghana</option>
-                        	<option value="GI">Gibraltar</option>
-                        	<option value="GR">Greece</option>
-                        	<option value="GL">Greenland</option>
-                        	<option value="GD">Grenada</option>
-                        	<option value="GP">Guadeloupe</option>
-                        	<option value="GU">Guam</option>
-                        	<option value="GT">Guatemala</option>
-                        	<option value="GG">Guernsey</option>
-                        	<option value="GN">Guinea</option>
-                        	<option value="GW">Guinea-Bissau</option>
-                        	<option value="GY">Guyana</option>
-                        	<option value="HT">Haiti</option>
-                        	<option value="HM">Heard Island and McDonald Islands</option>
-                        	<option value="VA">Holy See (Vatican City State)</option>
-                        	<option value="HN">Honduras</option>
-                        	<option value="HK">Hong Kong</option>
-                        	<option value="HU">Hungary</option>
-                        	<option value="IS">Iceland</option>
-                        	<option value="IN">India</option>
-                        	<option value="ID">Indonesia</option>
-                        	<option value="IR">Iran</option>
-                        	<option value="IQ">Iraq</option>
-                        	<option value="IE">Ireland</option>
-                        	<option value="IM">Isle of Man</option>
-                        	<option value="IL">Israel</option>
-                        	<option value="IT">Italy</option>
-                        	<option value="JM">Jamaica</option>
-                        	<option value="JP">Japan</option>
-                        	<option value="JE">Jersey</option>
-                        	<option value="JO">Jordan</option>
-                        	<option value="KZ">Kazakhstan</option>
-                        	<option value="KE">Kenya</option>
-                        	<option value="KI">Kiribati</option>
-                        	<option value="KP">North Korea</option>
-                        	<option value="KR">South Korea</option>
-                        	<option value="KW">Kuwait</option>
-                        	<option value="KG">Kyrgyzstan</option>
-                        	<option value="LA">Laos</option>
-                        	<option value="LV">Latvia</option>
-                        	<option value="LB">Lebanon</option>
-                        	<option value="LS">Lesotho</option>
-                        	<option value="LR">Liberia</option>
-                        	<option value="LY">Libya</option>
-                        	<option value="LI">Liechtenstein</option>
-                        	<option value="LT">Lithuania</option>
-                        	<option value="LU">Luxembourg</option>
-                        	<option value="MO">Macao</option>
-                        	<option value="MK">Macedonia</option>
-                        	<option value="MG">Madagascar</option>
-                        	<option value="MW">Malawi</option>
-                        	<option value="MY">Malaysia</option>
-                        	<option value="MV">Maldives</option>
-                        	<option value="ML">Mali</option>
-                        	<option value="MT">Malta</option>
-                        	<option value="MH">Marshall Islands</option>
-                        	<option value="MQ">Martinique</option>
-                        	<option value="MR">Mauritania</option>
-                        	<option value="MU">Mauritius</option>
-                        	<option value="YT">Mayotte</option>
-                        	<option value="MX">Mexico</option>
-                        	<option value="FM">Micronesia</option>
-                        	<option value="MD">Moldova</option>
-                        	<option value="MC">Monaco</option>
-                        	<option value="MN">Mongolia</option>
-                        	<option value="ME">Montenegro</option>
-                        	<option value="MS">Montserrat</option>
-                        	<option value="MA">Morocco</option>
-                        	<option value="MZ">Mozambique</option>
-                        	<option value="MM">Myanmar</option>
-                        	<option value="NA">Namibia</option>
-                        	<option value="NR">Nauru</option>
-                        	<option value="NP">Nepal</option>
-                        	<option value="NL">Netherlands</option>
-                        	<option value="NC">New Caledonia</option>
-                        	<option value="NZ">New Zealand</option>
-                        	<option value="NI">Nicaragua</option>
-                        	<option value="NE">Niger</option>
-                        	<option value="NG">Nigeria</option>
-                        	<option value="NU">Niue</option>
-                        	<option value="NF">Norfolk Island</option>
-                        	<option value="MP">Northern Mariana Islands</option>
-                        	<option value="NO">Norway</option>
-                        	<option value="OM">Oman</option>
-                        	<option value="PK">Pakistan</option>
-                        	<option value="PW">Palau</option>
-                        	<option value="PS">Palestine</option>
-                        	<option value="PA">Panama</option>
-                        	<option value="PG">Papua New Guinea</option>
-                        	<option value="PY">Paraguay</option>
-                        	<option value="PE">Peru</option>
-                        	<option value="PH">Philippines</option>
-                        	<option value="PN">Pitcairn</option>
-                        	<option value="PL">Poland</option>
-                        	<option value="PT">Portugal</option>
-                        	<option value="PR">Puerto Rico</option>
-                        	<option value="QA">Qatar</option>
-                        	<option value="RE">Réunion</option>
-                        	<option value="RO">Romania</option>
-                        	<option value="RU">Russian Federation</option>
-                        	<option value="RW">Rwanda</option>
-                        	<option value="BL">Saint Barthelemy</option>
-                        	<option value="SH">Saint Helena</option>
-                        	<option value="KN">Saint Kitts and Nevis</option>
-                        	<option value="LC">Saint Lucia</option>
-                        	<option value="MF">Saint Martin</option>
-                        	<option value="PM">Saint Pierre and Miquelon</option>
-                        	<option value="VC">Saint Vincent and the Grenadines</option>
-                        	<option value="WS">Samoa</option>
-                        	<option value="SM">San Marino</option>
-                        	<option value="ST">Sao Tome and Principe</option>
-                        	<option value="SA">Saudi Arabia</option>
-                        	<option value="SN">Senegal</option>
-                        	<option value="RS">Serbia</option>
-                        	<option value="SC">Seychelles</option>
-                        	<option value="SL">Sierra Leone</option>
-                        	<option value="SG">Singapore</option>
-                        	<option value="SX">Sint Maarten</option>
-                        	<option value="SK">Slovakia</option>
-                        	<option value="SI">Slovenia</option>
-                        	<option value="SB">Solomon Islands</option>
-                        	<option value="SO">Somalia</option>
-                        	<option value="ZA">South Africa</option>
-                        	<option value="GS">South Georgias</option>
-                        	<option value="SS">South Sudan</option>
-                        	<option value="ES">Spain</option>
-                        	<option value="LK">Sri Lanka</option>
-                        	<option value="SD">Sudan</option>
-                        	<option value="SR">Suriname</option>
-                        	<option value="SJ">Svalbard</option>
-                        	<option value="SZ">Swaziland</option>
-                        	<option value="SE">Sweden</option>
-                        	<option value="CH">Switzerland</option>
-                        	<option value="SY">Syria</option>
-                        	<option value="TW">Taiwan</option>
-                        	<option value="TJ">Tajikistan</option>
-                        	<option value="TZ">Tanzania of</option>
-                        	<option value="TH">Thailand</option>
-                        	<option value="TL">Timor-Leste</option>
-                        	<option value="TG">Togo</option>
-                        	<option value="TK">Tokelau</option>
-                        	<option value="TO">Tonga</option>
-                        	<option value="TT">Trinidad and Tobago</option>
-                        	<option value="TN">Tunisia</option>
-                        	<option value="TR">Turkey</option>
-                        	<option value="TM">Turkmenistan</option>
-                        	<option value="TC">Turks and Caicos Islands</option>
-                        	<option value="TV">Tuvalu</option>
-                        	<option value="UG">Uganda</option>
-                        	<option value="UA">Ukraine</option>
-                        	<option value="AE">United Arab Emirates</option>
-                        	<option value="GB">United Kingdom</option>
-                        	<option value="US">USA</option>
-                        	<option value="UM">United States Minor Outlying Islands</option>
-                        	<option value="UY">Uruguay</option>
-                        	<option value="UZ">Uzbekistan</option>
-                        	<option value="VU">Vanuatu</option>
-                        	<option value="VE">Venezuela</option>
-                        	<option value="VN">Vietnam</option>
-                        	<option value="VG">Virgin Islands</option>
-                        	<option value="WF">Wallis and Futuna</option>
-                        	<option value="EH">Western Sahara</option>
-                        	<option value="YE">Yemen</option>
-                        	<option value="ZM">Zambia</option>
-                        	<option value="ZW">Zimbabwe</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr class="off date_row" id="DVD">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="dvd_release_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="dvd_release_label">DVD Release Date</td>
-                    <td id="dvd_release_content" class="content_off">
-                      WAS RELEASED
-                      <select name="dvd_q_1" class="q_1" id="dvd_q_1">
-                        <option value=" < " label="before">BEFORE</option>
-                        <option value=" > " label="after">AFTER</option>
-                        <option value="BETWEEN " label="between">BETWEEN</option>
-                      </select>
-                      <input type="text" placeholder="YYYY-MM-DD" id="dvd_input_1" class="input_1"></input> <span id="dvd_between" class="content_off between_span">
-                        AND <input type="text" placeholder="YYYY-MM-DD" id= "dvd_input_2" class="input_2"></input>
-                      </span>
-                    </td>
-                </tr>
-                <tr class="off qualifier_with_list" id="director">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="director_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="director_label">Directors</td>
-                    <td id="director_content" class="content_off">
-                      CONTAINS
-                      <select name="director_q_1"  class="q_1">
-                        <option value="all" label="all of">ALL OF</option>
-                        <option value="none" label="none of">NONE OF</option>
-                        <option value="any" label="any of">ANY OF</option>
-                      </select>
-                      THE FOLLOWING DIRECTORS
-                      <input type="text" id="director_list_input" class="list_input"></input>
-                    </td>
-                </tr>
-                <tr class="off checkbox_input" id="Genre">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="genre_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="genre_label">Genre</td>
-                    <td id="genre_content" class="content_off">
-                        <ul class="checkbox_grid checkbox_grid_content" id="genre_list">
-                          <li><input type="checkbox" value="action" label="action">Action</option></li>
-                          <li><input type="checkbox" value="comedy" label="comedy">Comedy</option></li>
-                          <li><input type="checkbox" value="fantasy" label="fantasy">Fantasy</option></li>
-                          <li><input type="checkbox" value="musical" label="musical">Musical</option></li>
-                          <li><input type="checkbox" value="sport" label="sport">Sport</option></li>
-                      
-                          <li><input type="checkbox" value="adventure" label="adventure">Adventure</option></li>
-                          <li><input type="checkbox" value="crime" label="crime">Crime</option></li>
-                          <li><input type="checkbox" value="film-noir" label="film-noir">Film-Noir</option></li>
-                          <li><input type="checkbox" value="mystery" label="mystery">Mystery</option></li>
-                          <li><input type="checkbox" value="thriller" label="thriller">Thriller</option></li>
-                          
-                          <li><input type="checkbox" value="animation" label="animation">Animation</option></li>
-                          <li><input type="checkbox" value="drama" label="drama">Drama</option></li>
-                          <li><input type="checkbox" value="horror" label="horror">Horror</option></li>
-                          <li><input type="checkbox" value="romance" label="romance">Romance</option></li>
-                          <li><input type="checkbox" value="war" label="war">War</option></li>
-                          
-                          <li><input type="checkbox" value="biography" label="biography">Biography</option></li>
-                          <li><input type="checkbox" value="family" label="family">Family</option></li>
-                          <li><input type="checkbox" value="music" label="music">Music</option></li>
-                          <li><input type="checkbox" value="sci-fi" label="sci-fi">Sci-Fi</option></li>
-                          <li><input type="checkbox" value="western" label="western">Western</option></li>
-                        </ul>  
-            </td>
-                </tr>
-                <tr class="off number_row" id="imdbRating">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="imdb_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="imdb_label">IMDB Rating</td>
-                    <td id="imdb_content" class="content_off">
-                      RATING IS 
-                      <select name="imdb_q_1" id="imdb_rating_q_1" class="q_1">
-                        <option value=">" label="more than">LESS THAN</option>
-                        <option value="<" label="less than">MORE THAN</option>
-                        <option value="BETWEEN " label="between">BETWEEN</option>
-                      </select>
-                      <input type="text" id="imdb_input_1" class="input_1"></input> <span id="imdb_between" class="content_off">AND <input type="text" id="imdb_input_2" class="input_2"></input></span>
-                    </td>
-                </tr>
-                <tr class="off number_row" id="imdbVotes">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="imdb_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="imdb_votes_label">IMDB Votes</td>
-                    <td id="imdb_votes_content" class="content_off">
-                      NUMBER OF VOTES IS 
-                      <select name="imdb_votes_q_1" id="imdb_votes_q_1" class="q_1">
-                        <option value=">" label="more than">LESS THAN</option>
-                        <option value="<" label="less than">MORE THAN</option>
-                        <option value="BETWEEN " label="between">BETWEEN</option>
-                      </select>
-                      <input type="text" id="imdb_votes_input_1" class="input_1"></input> <span id="imdb_votes_between" class="content_off">AND <input type="text" id="imdb_votes_input_2" class="input_2"></input></span>
-                    </td>
-                </tr>
-                <tr class="off multi-select" id="Language">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="language_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="language_label">Language</td>
-                    <td id="language_content" class="content_off">
-                      <select data-placeholder="Choose a Language..." id="language_list" multiple>
-                        <option value="AF">Afrikanns</option>
-                        <option value="SQ">Albanian</option>
-                        <option value="AR">Arabic</option>
-                        <option value="HY">Armenian</option>
-                        <option value="EU">Basque</option>
-                        <option value="BN">Bengali</option>
-                        <option value="BG">Bulgarian</option>
-                        <option value="CA">Catalan</option>
-                        <option value="KM">Cambodian</option>
-                        <option value="ZH">Chinese</option>
-                        <option value="HR">Croation</option>
-                        <option value="CS">Czech</option>
-                        <option value="DA">Danish</option>
-                        <option value="NL">Dutch</option>
-                        <option value="EN">English</option>
-                        <option value="ET">Estonian</option>
-                        <option value="FJ">Fiji</option>
-                        <option value="FI">Finnish</option>
-                        <option value="FR">French</option>
-                        <option value="KA">Georgian</option>
-                        <option value="DE">German</option>
-                        <option value="EL">Greek</option>
-                        <option value="GU">Gujarati</option>
-                        <option value="HE">Hebrew</option>
-                        <option value="HI">Hindi</option>
-                        <option value="HU">Hungarian</option>
-                        <option value="IS">Icelandic</option>
-                        <option value="ID">Indonesian</option>
-                        <option value="GA">Irish</option>
-                        <option value="IT">Italian</option>
-                        <option value="JA">Japanese</option>
-                        <option value="JW">Javanese</option>
-                        <option value="KO">Korean</option>
-                        <option value="LA">Latin</option>
-                        <option value="LV">Latvian</option>
-                        <option value="LT">Lithuanian</option>
-                        <option value="MK">Macedonian</option>
-                        <option value="MS">Malay</option>
-                        <option value="ML">Malayalam</option>
-                        <option value="MT">Maltese</option>
-                        <option value="MI">Maori</option>
-                        <option value="MR">Marathi</option>
-                        <option value="MN">Mongolian</option>
-                        <option value="NE">Nepali</option>
-                        <option value="NO">Norwegian</option>
-                        <option value="FA">Persian</option>
-                        <option value="PL">Polish</option>
-                        <option value="PT">Portuguese</option>
-                        <option value="PA">Punjabi</option>
-                        <option value="QU">Quechua</option>
-                        <option value="RO">Romanian</option>
-                        <option value="RU">Russian</option>
-                        <option value="SM">Samoan</option>
-                        <option value="SR">Serbian</option>
-                        <option value="SK">Slovak</option>
-                        <option value="SL">Slovenian</option>
-                        <option value="ES">Spanish</option>
-                        <option value="SW">Swahili</option>
-                        <option value="SV">Swedish </option>
-                        <option value="TA">Tamil</option>
-                        <option value="TT">Tatar</option>
-                        <option value="TE">Telugu</option>
-                        <option value="TH">Thai</option>
-                        <option value="BO">Tibetan</option>
-                        <option value="TO">Tonga</option>
-                        <option value="TR">Turkish</option>
-                        <option value="UK">Ukranian</option>
-                        <option value="UR">Urdu</option>
-                        <option value="UZ">Uzbek</option>
-                        <option value="VI">Vietnamese</option>
-                        <option value="CY">Welsh</option>
-                        <option value="XH">Xhosa</option>
-                      </select>
-                    </td>
-                </tr>
-                <tr class="off number_row" id="Metascore">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="metascore_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="metascore_label">Metascore</td>
-                    <td id="metascore_content" class="content_off">
-                      SCORE IS 
-                      <select name="metascore_q_1" id="metascore_q_1" class="q_1">
-                        <option value=">" label="more than">LESS THAN</option>
-                        <option value="<" label="less than">MORE THAN</option>
-                        <option value="BETWEEN " label="between">BETWEEN</option>
-                      </select>
-                      <input type="text" id="metascore_input_1" class="input_1"></input> <span id="metascore_between" 
-                      class="content_off">AND <input type="text" id="metascore_input_2" class="input_2"></input></span>
-                    </td>
-                </tr>
-                <tr class="off qualifier_with_list" id="Plot">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="plot_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="plot_label">Plot Description</td>
-                    <td id="plot_content" class="content_off">
-                      CONTAINS
-                      <select name="plot_q_1"  class="q_1">
-                        <option value="all" label="all of">ALL OF</option>
-                        <option value="none" label="none of">NONE OF</option>
-                        <option value="any" label="any of">ANY OF</option>
-                      </select>
-                      THE FOLLOWING WORDS OR PHRASES
-                      <input type="text" id="plot_list_input" class="list_input"></input>
-                    </td>
-                </tr>
-                <tr class="off qualifier_with_list" id="Production">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="produced_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="produced_label">Produced By</td>
-                    <td id="produced_content" class="content_off">
-                      <select name="produced_q_1"  class="q_1">
-                        <option value="all" label="all of">ALL OF</option>
-                        <option value="none" label="none of">NONE OF</option>
-                        <option value="any" label="any of">ANY OF</option>
-                      </select>
-                      THE FOLLOWING PRODUCTION COMPANIES
-                      <input type="text" id="produced_list_input" class="list_input"></input>
-                    </td>
-                </tr>
-                <tr class="off checkbox_input" id="Rated">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="rated_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="rated_label">Rated</td>
-                    <td id="rated_content" class="content_off">
-                      <ul class="checkbox_grid checkbox_grid_content" id="rated_list">
-                        <li><input type="checkbox" value="G" label="G"> G</option></li>
-                        <li><input type="checkbox" value="PG" label="PG"> PG</option></li>
-                        <li><input type="checkbox" value="PG-13" label="PG-13"> PG-13</option></li>
-                        <li><input type="checkbox" value="R" label="R"> R</option></li>
-                        <li><input type="checkbox" value="NC-17" label="NC-17"> NC-17</option></li>
-                        <li><input type="checkbox" value="NOT RATED" label="Unrated"> Unrated</option></li>
-                        <li><input type="checkbox" value="TV-Y" label="TV-Y">TV-Y</option></li>
-                        <li><input type="checkbox" value="TV-Y7" label="TV-Y7">TV-Y7</option></li>
-                        <li><input type="checkbox" value="TV-G" label="TV-G">TV-G</option></li>
-                        <li><input type="checkbox" value="TV-PG" label="TV-PG">TV-PG</option></li>
-                        <li><input type="checkbox" value="TV-14" label="TV-14">TV-14</option></li>
-                        <li><input type="checkbox" value="TV-MA" label="TV-MA">TV-MA</option></li>
-                      </ul>
-                    </td>
-                </tr>
-                <tr class="off date_row" id="Released">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="released_date_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="released_date_label">Release Date</td>
-                    <td id="released_date_content" class="content_off">
-                      WAS RELEASED
-                      <select name="release_q_1" class="q_1" id="release_q_1">
-                        <option value="<" label="before">BEFORE</option>
-                        <option value=">" label="after">AFTER</option>
-                        <option value="BETWEEN " label="between">BETWEEN</option>
-                      </select>
-                      <input type="text" placeholder="YYYY-MM-DD" class="input_1" id="release_input_1"></input> <span class="between_span content_off">
-                        AND <input type="text" placeholder="YYYY-MM-DD" class="input_2" id="release_input_2"></input>
-                      </span>
-                    </td>
-                </tr>
-                <tr class="off number_row" id="RottenTomatoes">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="rotten_tomato_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="rotten_tomato_label">Rotten Tomato Score</td>
-                    <td id="rotten_tomato_content" class="content_off">
-                      SCORE IS 
-                      <select name="rotten_tomato_q_1" id="rotten_tomato_q_1" class="q_1">
-                        <option value=">" label="more than">LESS THAN</option>
-                        <option value="<" label="less than">MORE THAN</option>
-                        <option value="BETWEEN " label="between">BETWEEN</option>
-                      </select>
-                      <input type="text" id="rotten_tomato_input_1" class="input_1"></input> % <span id="rotten_tomato_between" 
-                      class="content_off">AND <input type="text" id="rotten_tomato_input_2" class="input_2"></input> %</span>
-                    </td>
-                </tr>
-                <tr class="off qualifier_with_list" id="Title">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="title_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="title_label">Title</td>
-                    <td id="title_content" class="content_off">
-                      CONTAINS
-                      <select name="title_q_1"  class="q_1">
-                        <option value="all" label="all of">ALL OF</option>
-                        <option value="none" label="none of">NONE OF</option>
-                        <option value="any" label="any of">ANY OF</option>
-                      </select>
-                      THE FOLLOWING WORDS OR PHRASES
-                      <input type="text" id="title_list_input" class="list_input"></input>
-                    </td>
-                </tr>
-                <tr class="off qualifier_with_list" id="Writer">
-                    <td>
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="writers_switch">
-                            <span class="custom-control-indicator"></span>
-                        </label>
-                    </td>
-                    <td id="writers_label">Writers</td>
-                  <td id="writers_content" class="content_off">
-                      CONTAINS
-                      <select name="writer_q_1"  class="q_1">
-                        <option value="all" label="all of">ALL OF</option>
-                        <option value="none" label="none of">NONE OF</option>
-                        <option value="any" label="any of">ANY OF</option>
-                      </select>
-                      THE FOLLOWING WRITERS
-                      <input type="text" id="writer_list_input" class="list_input"></input>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        </fieldset>
-        </form>
-        <br/>
-        <div class="generate_section">
-          ORDER COLUMNS BY 
-          <select data-placeholder="-------" name="order_by" id="order_by" >
-            <option value="" selected>--OPTIONAL--</option>
-            <option value="actors" label="Actor"></option>
-            <option value="awards" label="Awards"></option>
-            <option value="boxoffice" label="Box Office Earnings"></option>
-            <option value="country" label="Country"></option>
-            <option value="dvd" label="DVD Release Date"></option>
-            <option value="director" label="Directors"></option>
-            <option value="genre" label="Genre"></option>
-            <option value="imdbrating" label="IMDB Rating"></option>
-            <option value="imdbvotes" label="IMDB Votes"></option>
-            <option value="language" label="Language"></option>
-            <option value="metascore" label="Metascore"></option>
-            <option value="plot" label="Plot"></option>
-            <option value="produced" label="Produced By"></option>
-            <option value="rated" label="Rated"></option>
-            <option value="released" label="Release Date"></option>
-            <option value="runtime" label="Runtime"></option>
-            <option value="title" label="Title"></option>
-            <option value="type" label="Type (movie, show, or episode)"></option>
-            <option value="writer" label="Writer"></option>
-          </select>
+            
+            <div class="row">
+                    <table class="table  table-sm">
+                        <tbody>
+                            <tr class="off qualifier_with_list" id="Actors">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="actor_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="actor_label">Actors</td>
+                                <td id="actor_content" class="content_off">
+                                  CONTAINS
+                                  <select name="actor_q_1" class="q_1">
+                                    <option value="all" label="all of">ALL OF</option>
+                                    <option value="none" label="none of">NONE OF</option>
+                                    <option value="any" label="any of">ANY OF</option>
+                                  </select>
+                                  THE FOLLOWING ACTORS
+                                  <input type="text" id="actor_list_input" class="list_input"></input>
+                                </td>
+                            </tr>
+                            <tr class="off qualifier_with_list" id="Awards">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="award_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="award_label">Awards</td>
+                                <td id="award_content" class="content_off">
+                                    <p style="color: grey; margin-top: 2px; border-bottom: 1px solid lightgrey;"><strong>Note!</strong> Some awards are reported as "2 wins. 3 nominations." Others include the name of the specific award. </p>
+                                    AWARDS FIELD CONTAINS
+                                    <select name="awards_q_1" class="q_1">
+                                      <option value="all" label="all of">ALL OF</option>
+                                      <option value="none" label="none of">NONE OF</option>
+                                      <option value="any" label="any of">ANY OF</option>
+                                    </select>
+                                  THE FOLLOWING WORDS
+                                   <input id="award_list_input" class="list_input" type="text"></input>
+                                </td>
+                            </tr>
+                            <tr class="off number_row"  id="BoxOffice">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="box_office_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="box_office_label">Box Office Earnings</td>
+                                <td id="box_office_content" class="content_off">
+                                  HAS EARNED
+                                  <select name="box_office_q_1" id="box_office_q_1" class="q_1">
+                                    <option value=">" label="more than">LESS THAN</option>
+                                    <option value="<" label="less than">MORE THAN</option>
+                                    <option value="BETWEEN " label="between">BETWEEN</option>
+                                  </select>
+                                  <select name="currency_q_1" id="currency_q_1" class="q_1">
+                                    <option value="USD" label="USD"></option>
+                                    <option value="EUR" label="EUR"></option>
+                                    <option value="Other" label="OTHER"></option>
+                                  </select>
+                                  <input type="number" id="box_office_input_1" class="input_1"></input> <span id="box_office_between" class="content_off">AND <input type="number" id="box_office_input_2" class="input_2"></input></span>
+                                </td>
+                            </tr>
+                            <tr class="off multi-select" id="Country">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="country_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="country_label">Country</td>
+                                <td id="country_content" class="content_off">
+                                   <div style="display: inline;">
+                                        <p id="countries_selected" ></p>
+                                    </div>
+                                    <div>
+                                        <select label="countries" id="country_list" multiple>
+                                        <option value="AF">Afghanistan</option>
+                                        <option value="AX">Aland Islands</option>
+                                        <option value="AL">Albania</option>
+                                        <option value="DZ">Algeria</option>
+                                        <option value="AS">American Samoa</option>
+                                        <option value="AD">Andorra</option>
+                                        <option value="AO">Angola</option>
+                                        <option value="AI">Anguilla</option>
+                                        <option value="AQ">Antarctica</option>
+                                        <option value="AG">Antigua and Barbuda</option>
+                                        <option value="AR">Argentina</option>
+                                        <option value="AM">Armenia</option>
+                                        <option value="AW">Aruba</option>
+                                        <option value="AU">Australia</option>
+                                        <option value="AT">Austria</option>
+                                        <option value="AZ">Azerbaijan</option>
+                                        <option value="BS">Bahamas</option>
+                                        <option value="BH">Bahrain</option>
+                                        <option value="BD">Bangladesh</option>
+                                        <option value="BB">Barbados</option>
+                                        <option value="BY">Belarus</option>
+                                        <option value="BE">Belgium</option>
+                                        <option value="BZ">Belize</option>
+                                        <option value="BJ">Benin</option>
+                                        <option value="BM">Bermuda</option>
+                                        <option value="BT">Bhutan</option>
+                                        <option value="BO">Bolivia</option>
+                                        <option value="BQ">Bonaire</option>
+                                        <option value="BA">Bosnia and Herzegovina</option>
+                                        <option value="BW">Botswana</option>
+                                        <option value="BV">Bouvet Island</option>
+                                        <option value="BR">Brazil</option>
+                                        <option value="IO">British Indian Ocean Territory</option>
+                                        <option value="BN">Brunei Darussalam</option>
+                                        <option value="BG">Bulgaria</option>
+                                        <option value="BF">Burkina Faso</option>
+                                        <option value="BI">Burundi</option>
+                                        <option value="KH">Cambodia</option>
+                                        <option value="CM">Cameroon</option>
+                                        <option value="CA">Canada</option>
+                                        <option value="CV">Cape Verde</option>
+                                        <option value="KY">Cayman Islands</option>
+                                        <option value="CF">Central African Republic</option>
+                                        <option value="TD">Chad</option>
+                                        <option value="CL">Chile</option>
+                                        <option value="CN">China</option>
+                                        <option value="CX">Christmas Island</option>
+                                        <option value="CC">Cocos Islands</option>
+                                        <option value="CO">Colombia</option>
+                                        <option value="KM">Comoros</option>
+                                        <option value="CG">Congo</option>
+                                        <option value="CK">Cook Islands</option>
+                                        <option value="CR">Costa Rica</option>
+                                        <option value="CI">Cote d'Ivoire</option>
+                                        <option value="HR">Croatia</option>
+                                        <option value="CU">Cuba</option>
+                                        <option value="CW">Curaçao</option>
+                                        <option value="CY">Cyprus</option>
+                                        <option value="CZ">Czech Republic</option>
+                                        <option value="CD">Democratic Republic of the Congo</option>
+                                        <option value="DK">Denmark</option>
+                                        <option value="DJ">Djibouti</option>
+                                        <option value="DM">Dominica</option>
+                                        <option value="DO">Dominican Republic</option>
+                                        <option value="EC">Ecuador</option>
+                                        <option value="EG">Egypt</option>
+                                        <option value="SV">El Salvador</option>
+                                        <option value="GQ">Equatorial Guinea</option>
+                                        <option value="ER">Eritrea</option>
+                                        <option value="EE">Estonia</option>
+                                        <option value="ET">Ethiopia</option>
+                                        <option value="FK">Falkland Islands</option>
+                                        <option value="FO">Faroe Islands</option>
+                                        <option value="FJ">Fiji</option>
+                                        <option value="FI">Finland</option>
+                                        <option value="FR">France</option>
+                                        <option value="GF">French Guiana</option>
+                                        <option value="PF">French Polynesia</option>
+                                        <option value="TF">French Southern Territories</option>
+                                        <option value="GA">Gabon</option>
+                                        <option value="GM">Gambia</option>
+                                        <option value="GE">Georgia</option>
+                                        <option value="DE">Germany</option>
+                                        <option value="GH">Ghana</option>
+                                        <option value="GI">Gibraltar</option>
+                                        <option value="GR">Greece</option>
+                                        <option value="GL">Greenland</option>
+                                        <option value="GD">Grenada</option>
+                                        <option value="GP">Guadeloupe</option>
+                                        <option value="GU">Guam</option>
+                                        <option value="GT">Guatemala</option>
+                                        <option value="GG">Guernsey</option>
+                                        <option value="GN">Guinea</option>
+                                        <option value="GW">Guinea-Bissau</option>
+                                        <option value="GY">Guyana</option>
+                                        <option value="HT">Haiti</option>
+                                        <option value="HM">Heard Island and McDonald Islands</option>
+                                        <option value="HS">Holy See</option>
+                                        <option value="HN">Honduras</option>
+                                        <option value="HK">Hong Kong</option>
+                                        <option value="HU">Hungary</option>
+                                        <option value="IS">Iceland</option>
+                                        <option value="IN">India</option>
+                                        <option value="ID">Indonesia</option>
+                                        <option value="IR">Iran</option>
+                                        <option value="IQ">Iraq</option>
+                                        <option value="IE">Ireland</option>
+                                        <option value="IM">Isle of Man</option>
+                                        <option value="IL">Israel</option>
+                                        <option value="IT">Italy</option>
+                                        <option value="JM">Jamaica</option>
+                                        <option value="JP">Japan</option>
+                                        <option value="JE">Jersey</option>
+                                        <option value="JO">Jordan</option>
+                                        <option value="KZ">Kazakhstan</option>
+                                        <option value="KE">Kenya</option>
+                                        <option value="KI">Kiribati</option>
+                                        <option value="KP">North Korea</option>
+                                        <option value="KR">South Korea</option>
+                                        <option value="KW">Kuwait</option>
+                                        <option value="KG">Kyrgyzstan</option>
+                                        <option value="LA">Laos</option>
+                                        <option value="LV">Latvia</option>
+                                        <option value="LB">Lebanon</option>
+                                        <option value="LS">Lesotho</option>
+                                        <option value="LR">Liberia</option>
+                                        <option value="LY">Libya</option>
+                                        <option value="LI">Liechtenstein</option>
+                                        <option value="LT">Lithuania</option>
+                                        <option value="LU">Luxembourg</option>
+                                        <option value="MO">Macao</option>
+                                        <option value="MK">Macedonia</option>
+                                        <option value="MG">Madagascar</option>
+                                        <option value="MW">Malawi</option>
+                                        <option value="MY">Malaysia</option>
+                                        <option value="MV">Maldives</option>
+                                        <option value="ML">Mali</option>
+                                        <option value="MT">Malta</option>
+                                        <option value="MH">Marshall Islands</option>
+                                        <option value="MQ">Martinique</option>
+                                        <option value="MR">Mauritania</option>
+                                        <option value="MU">Mauritius</option>
+                                        <option value="YT">Mayotte</option>
+                                        <option value="MX">Mexico</option>
+                                        <option value="FM">Micronesia</option>
+                                        <option value="MD">Moldova</option>
+                                        <option value="MC">Monaco</option>
+                                        <option value="MN">Mongolia</option>
+                                        <option value="ME">Montenegro</option>
+                                        <option value="MS">Montserrat</option>
+                                        <option value="MA">Morocco</option>
+                                        <option value="MZ">Mozambique</option>
+                                        <option value="MM">Myanmar</option>
+                                        <option value="NA">Namibia</option>
+                                        <option value="NR">Nauru</option>
+                                        <option value="NP">Nepal</option>
+                                        <option value="NL">Netherlands</option>
+                                        <option value="NC">New Caledonia</option>
+                                        <option value="NZ">New Zealand</option>
+                                        <option value="NI">Nicaragua</option>
+                                        <option value="NE">Niger</option>
+                                        <option value="NG">Nigeria</option>
+                                        <option value="NU">Niue</option>
+                                        <option value="NF">Norfolk Island</option>
+                                        <option value="MP">Northern Mariana Islands</option>
+                                        <option value="NO">Norway</option>
+                                        <option value="OM">Oman</option>
+                                        <option value="PK">Pakistan</option>
+                                        <option value="PW">Palau</option>
+                                        <option value="PS">Palestine</option>
+                                        <option value="PA">Panama</option>
+                                        <option value="PG">Papua New Guinea</option>
+                                        <option value="PY">Paraguay</option>
+                                        <option value="PE">Peru</option>
+                                        <option value="PH">Philippines</option>
+                                        <option value="PN">Pitcairn</option>
+                                        <option value="PL">Poland</option>
+                                        <option value="PT">Portugal</option>
+                                        <option value="PR">Puerto Rico</option>
+                                        <option value="QA">Qatar</option>
+                                        <option value="RE">Reunion</option>
+                                        <option value="RO">Romania</option>
+                                        <option value="RU">Russian Federation</option>
+                                        <option value="RW">Rwanda</option>
+                                        <option value="BL">Saint Barthelemy</option>
+                                        <option value="SH">Saint Helena</option>
+                                        <option value="KN">Saint Kitts and Nevis</option>
+                                        <option value="LC">Saint Lucia</option>
+                                        <option value="MF">Saint Martin</option>
+                                        <option value="PM">Saint Pierre and Miquelon</option>
+                                        <option value="VC">Saint Vincent and the Grenadines</option>
+                                        <option value="WS">Samoa</option>
+                                        <option value="SM">San Marino</option>
+                                        <option value="ST">Sao Tome and Principe</option>
+                                        <option value="SA">Saudi Arabia</option>
+                                        <option value="SN">Senegal</option>
+                                        <option value="RS">Serbia</option>
+                                        <option value="SC">Seychelles</option>
+                                        <option value="SL">Sierra Leone</option>
+                                        <option value="SG">Singapore</option>
+                                        <option value="SX">Sint Maarten</option>
+                                        <option value="SK">Slovakia</option>
+                                        <option value="SI">Slovenia</option>
+                                        <option value="SB">Solomon Islands</option>
+                                        <option value="SO">Somalia</option>
+                                        <option value="ZA">South Africa</option>
+                                        <option value="GS">South Georgias</option>
+                                        <option value="SS">South Sudan</option>
+                                        <option value="ES">Spain</option>
+                                        <option value="LK">Sri Lanka</option>
+                                        <option value="SD">Sudan</option>
+                                        <option value="SR">Suriname</option>
+                                        <option value="SJ">Svalbard</option>
+                                        <option value="SZ">Swaziland</option>
+                                        <option value="SE">Sweden</option>
+                                        <option value="CH">Switzerland</option>
+                                        <option value="SY">Syria</option>
+                                        <option value="TW">Taiwan</option>
+                                        <option value="TJ">Tajikistan</option>
+                                        <option value="TZ">Tanzania</option>
+                                        <option value="TH">Thailand</option>
+                                        <option value="TL">Timor Leste</option>
+                                        <option value="TG">Togo</option>
+                                        <option value="TK">Tokelau</option>
+                                        <option value="TO">Tonga</option>
+                                        <option value="TT">Trinidad and Tobago</option>
+                                        <option value="TN">Tunisia</option>
+                                        <option value="TR">Turkey</option>
+                                        <option value="TM">Turkmenistan</option>
+                                        <option value="TC">Turks and Caicos</option>
+                                        <option value="TV">Tuvalu</option>
+                                        <option value="UG">Uganda</option>
+                                        <option value="UA">Ukraine</option>
+                                        <option value="AE">United Arab Emirates</option>
+                                        <option value="GB">UK</option>
+                                        <option value="US">USA</option>
+                                        <option value="UM">United States Minor Outlying Islands</option>
+                                        <option value="UY">Uruguay</option>
+                                        <option value="UZ">Uzbekistan</option>
+                                        <option value="VU">Vanuatu</option>
+                                        <option value="VC">Vatican City</option>
+                                        <option value="VE">Venezuela</option>
+                                        <option value="VN">Vietnam</option>
+                                        <option value="VG">Virgin Islands</option>
+                                        <option value="WF">Wallis and Futuna</option>
+                                        <option value="EH">Western Sahara</option>
+                                        <option value="YE">Yemen</option>
+                                        <option value="ZM">Zambia</option>
+                                        <option value="ZW">Zimbabwe</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="off date_row" id="DVD">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="dvd_release_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="dvd_release_label">DVD Release Date</td>
+                                <td id="dvd_release_content" class="content_off">
+                                  WAS RELEASED
+                                  <select name="dvd_q_1" class="q_1" id="dvd_q_1">
+                                    <option value=" < " label="before">BEFORE</option>
+                                    <option value=" > " label="after">AFTER</option>
+                                    <option value="BETWEEN " label="between">BETWEEN</option>
+                                  </select>
+                                  <input type="text" placeholder="YYYY-MM-DD" id="dvd_input_1" class="input_1"></input> <span id="dvd_between" class="content_off between_span">
+                                    AND <input type="text" placeholder="YYYY-MM-DD" id= "dvd_input_2" class="input_2"></input>
+                                  </span>
+                                </td>
+                            </tr>
+                            <tr class="off qualifier_with_list" id="director">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="director_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="director_label">Directors</td>
+                                <td id="director_content" class="content_off">
+                                  CONTAINS
+                                  <select name="director_q_1"  class="q_1">
+                                    <option value="all" label="all of">ALL OF</option>
+                                    <option value="none" label="none of">NONE OF</option>
+                                    <option value="any" label="any of">ANY OF</option>
+                                  </select>
+                                  THE FOLLOWING DIRECTORS
+                                  <input type="text" id="director_list_input" class="list_input"></input>
+                                </td>
+                            </tr>
+                            <tr class="off checkbox_input" id="Genre">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="genre_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="genre_label">Genre</td>
+                                <td id="genre_content" class="content_off">
+                                    <ul class="checkbox_grid checkbox_grid_content" id="genre_list">
+                                      <li><input type="checkbox" value="action" label="action">Action</option></li>
+                                      <li><input type="checkbox" value="comedy" label="comedy">Comedy</option></li>
+                                      <li><input type="checkbox" value="fantasy" label="fantasy">Fantasy</option></li>
+                                      <li><input type="checkbox" value="musical" label="musical">Musical</option></li>
+                                      <li><input type="checkbox" value="sport" label="sport">Sport</option></li>
+                                  
+                                      <li><input type="checkbox" value="adventure" label="adventure">Adventure</option></li>
+                                      <li><input type="checkbox" value="crime" label="crime">Crime</option></li>
+                                      <li><input type="checkbox" value="film-noir" label="film-noir">Film-Noir</option></li>
+                                      <li><input type="checkbox" value="mystery" label="mystery">Mystery</option></li>
+                                      <li><input type="checkbox" value="thriller" label="thriller">Thriller</option></li>
+                                      
+                                      <li><input type="checkbox" value="animation" label="animation">Animation</option></li>
+                                      <li><input type="checkbox" value="drama" label="drama">Drama</option></li>
+                                      <li><input type="checkbox" value="horror" label="horror">Horror</option></li>
+                                      <li><input type="checkbox" value="romance" label="romance">Romance</option></li>
+                                      <li><input type="checkbox" value="war" label="war">War</option></li>
+                                      
+                                      <li><input type="checkbox" value="biography" label="biography">Biography</option></li>
+                                      <li><input type="checkbox" value="family" label="family">Family</option></li>
+                                      <li><input type="checkbox" value="music" label="music">Music</option></li>
+                                      <li><input type="checkbox" value="sci-fi" label="sci-fi">Sci-Fi</option></li>
+                                      <li><input type="checkbox" value="western" label="western">Western</option></li>
+                                    </ul>  
+                        </td>
+                            </tr>
+                            <tr class="off number_row" id="imdbRating">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="imdb_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="imdb_label">IMDB Rating</td>
+                                <td id="imdb_content" class="content_off">
+                                  RATING (from 0 to 100) IS 
+                                  <select name="imdb_q_1" id="imdb_rating_q_1" class="q_1">
+                                    <option value=">" label="more than">LESS THAN</option>
+                                    <option value="<" label="less than">MORE THAN</option>
+                                    <option value="BETWEEN " label="between">BETWEEN</option>
+                                  </select>
+                                  <input type="number" id="imdb_input_1" class="input_1"></input> <span id="imdb_between" class="content_off">AND <input type="number" id="imdb_input_2" class="input_2"></input></span>
+                                </td>
+                            </tr>
+                            <tr class="off number_row" id="imdbVotes">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="imdb_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="imdb_votes_label">IMDB Votes</td>
+                                <td id="imdb_votes_content" class="content_off">
+                                  NUMBER OF VOTES IS 
+                                  <select name="imdb_votes_q_1" id="imdb_votes_q_1" class="q_1">
+                                    <option value=">" label="more than">LESS THAN</option>
+                                    <option value="<" label="less than">MORE THAN</option>
+                                    <option value="BETWEEN " label="between">BETWEEN</option>
+                                  </select>
+                                  <input type="number" id="imdb_votes_input_1" class="input_1"></input> <span id="imdb_votes_between" class="content_off">AND <input type="number" id="imdb_votes_input_2" class="input_2"></input></span>
+                                </td>
+                            </tr>
+                            <tr class="off multi-select" id="Language">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="language_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="language_label">Language</td>
 
+                                <td id="language_content" class="content_off">
+                                    <div style="display: inline;">
+                                        <p id="languages_selected" ></p>
+                                    </div>
+                                    <div>
+                                        <select data-placeholder="Choose a Language..." id="language_list" multiple>
+                                            <option value="AF">Afrikanns</option>
+                                            <option value="SQ">Albanian</option>
+                                            <option value="AR">Arabic</option>
+                                            <option value="HY">Armenian</option>
+                                            <option value="EU">Basque</option>
+                                            <option value="BN">Bengali</option>
+                                            <option value="BG">Bulgarian</option>
+                                            <option value="CA">Catalan</option>
+                                            <option value="KM">Cambodian</option>
+                                            <option value="ZH">Chinese</option>
+                                            <option value="HR">Croation</option>
+                                            <option value="CS">Czech</option>
+                                            <option value="DA">Danish</option>
+                                            <option value="NL">Dutch</option>
+                                            <option value="EN">English</option>
+                                            <option value="ET">Estonian</option>
+                                            <option value="FJ">Fiji</option>
+                                            <option value="FI">Finnish</option>
+                                            <option value="FR">French</option>
+                                            <option value="KA">Georgian</option>
+                                            <option value="DE">German</option>
+                                            <option value="EL">Greek</option>
+                                            <option value="GU">Gujarati</option>
+                                            <option value="HE">Hebrew</option>
+                                            <option value="HI">Hindi</option>
+                                            <option value="HU">Hungarian</option>
+                                            <option value="IS">Icelandic</option>
+                                            <option value="ID">Indonesian</option>
+                                            <option value="GA">Irish</option>
+                                            <option value="IT">Italian</option>
+                                            <option value="JA">Japanese</option>
+                                            <option value="JW">Javanese</option>
+                                            <option value="KO">Korean</option>
+                                            <option value="LA">Latin</option>
+                                            <option value="LV">Latvian</option>
+                                            <option value="LT">Lithuanian</option>
+                                            <option value="MK">Macedonian</option>
+                                            <option value="MS">Malay</option>
+                                            <option value="ML">Malayalam</option>
+                                            <option value="MT">Maltese</option>
+                                            <option value="MI">Maori</option>
+                                            <option value="MR">Marathi</option>
+                                            <option value="MN">Mongolian</option>
+                                            <option value="NE">Nepali</option>
+                                            <option value="NO">Norwegian</option>
+                                            <option value="FA">Persian</option>
+                                            <option value="PL">Polish</option>
+                                            <option value="PT">Portuguese</option>
+                                            <option value="PA">Punjabi</option>
+                                            <option value="QU">Quechua</option>
+                                            <option value="RO">Romanian</option>
+                                            <option value="RU">Russian</option>
+                                            <option value="SM">Samoan</option>
+                                            <option value="SR">Serbian</option>
+                                            <option value="SK">Slovak</option>
+                                            <option value="SL">Slovenian</option>
+                                            <option value="ES">Spanish</option>
+                                            <option value="SW">Swahili</option>
+                                            <option value="SV">Swedish </option>
+                                            <option value="TA">Tamil</option>
+                                            <option value="TT">Tatar</option>
+                                            <option value="TE">Telugu</option>
+                                            <option value="TH">Thai</option>
+                                            <option value="BO">Tibetan</option>
+                                            <option value="TO">Tonga</option>
+                                            <option value="TR">Turkish</option>
+                                            <option value="UK">Ukranian</option>
+                                            <option value="UR">Urdu</option>
+                                            <option value="UZ">Uzbek</option>
+                                            <option value="VI">Vietnamese</option>
+                                            <option value="CY">Welsh</option>
+                                            <option value="XH">Xhosa</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="off number_row" id="Metascore">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="metascore_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="metascore_label">Metascore</td>
+                                <td id="metascore_content" class="content_off">
+                                  SCORE (from 0 to 100) IS 
+                                  <select name="metascore_q_1" id="metascore_q_1" class="q_1">
+                                    <option value=">" label="more than">LESS THAN</option>
+                                    <option value="<" label="less than">MORE THAN</option>
+                                    <option value="BETWEEN " label="between">BETWEEN</option>
+                                  </select>
+                                  <input type="number" id="metascore_input_1" class="input_1"></input> <span id="metascore_between" 
+                                  class="content_off">AND <input type="number" id="metascore_input_2" class="input_2"></input></span>
+                                </td>
+                            </tr>
+                            <tr class="off qualifier_with_list" id="Plot">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="plot_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="plot_label">Plot Description</td>
+                                <td id="plot_content" class="content_off">
+                                  CONTAINS
+                                  <select name="plot_q_1"  class="q_1">
+                                    <option value="all" label="all of">ALL OF</option>
+                                    <option value="none" label="none of">NONE OF</option>
+                                    <option value="any" label="any of">ANY OF</option>
+                                  </select>
+                                  THE FOLLOWING WORDS OR PHRASES
+                                  <input type="text" id="plot_list_input" class="list_input"></input>
+                                </td>
+                            </tr>
+                            <tr class="off qualifier_with_list" id="Production">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="produced_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="produced_label">Produced By</td>
+                                <td id="produced_content" class="content_off">
+                                  <select name="produced_q_1"  class="q_1">
+                                    <option value="all" label="all of">ALL OF</option>
+                                    <option value="none" label="none of">NONE OF</option>
+                                    <option value="any" label="any of">ANY OF</option>
+                                  </select>
+                                  THE FOLLOWING PRODUCTION COMPANIES
+                                  <input type="text" id="produced_list_input" class="list_input"></input>
+                                </td>
+                            </tr>
+                            <tr class="off checkbox_input" id="Rated">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="rated_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="rated_label">Rated</td>
+                                <td id="rated_content" class="content_off">
+                                  <ul class="checkbox_grid checkbox_grid_content" id="rated_list">
+                                    <li><input type="checkbox" value="G" label="G"> G</option></li>
+                                    <li><input type="checkbox" value="PG" label="PG"> PG</option></li>
+                                    <li><input type="checkbox" value="PG-13" label="PG-13"> PG-13</option></li>
+                                    <li><input type="checkbox" value="R" label="R"> R</option></li>
+                                    <li><input type="checkbox" value="NC-17" label="NC-17"> NC-17</option></li>
+                                    <li><input type="checkbox" value="NOT RATED" label="Unrated"> Unrated</option></li>
+                                    <li><input type="checkbox" value="TV-Y" label="TV-Y">TV-Y</option></li>
+                                    <li><input type="checkbox" value="TV-Y7" label="TV-Y7">TV-Y7</option></li>
+                                    <li><input type="checkbox" value="TV-G" label="TV-G">TV-G</option></li>
+                                    <li><input type="checkbox" value="TV-PG" label="TV-PG">TV-PG</option></li>
+                                    <li><input type="checkbox" value="TV-14" label="TV-14">TV-14</option></li>
+                                    <li><input type="checkbox" value="TV-MA" label="TV-MA">TV-MA</option></li>
+                                  </ul>
+                                </td>
+                            </tr>
+                            <tr class="off date_row" id="Released">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="released_date_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="released_date_label">Release Date</td>
+                                <td id="released_date_content" class="content_off">
+                                  WAS RELEASED
+                                  <select name="release_q_1" class="q_1" id="release_q_1">
+                                    <option value="<" label="before">BEFORE</option>
+                                    <option value=">" label="after">AFTER</option>
+                                    <option value="BETWEEN " label="between">BETWEEN</option>
+                                  </select>
+                                  <input type="text" placeholder="YYYY-MM-DD" class="input_1" id="release_input_1"></input> <span class="between_span content_off">
+                                    AND <input type="text" placeholder="YYYY-MM-DD" class="input_2" id="release_input_2"></input>
+                                  </span>
+                                </td>
+                            </tr>
+                            <tr class="off number_row" id="RottenTomatoes">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="rotten_tomato_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="rotten_tomato_label">Rotten Tomato Score</td>
+                                <td id="rotten_tomato_content" class="content_off">
+                                  SCORE IS 
+                                  <select name="rotten_tomato_q_1" id="rotten_tomato_q_1" class="q_1">
+                                    <option value=">" label="more than">LESS THAN</option>
+                                    <option value="<" label="less than">MORE THAN</option>
+                                    <option value="BETWEEN " label="between">BETWEEN</option>
+                                  </select>
+                                  <input type="number" id="rotten_tomato_input_1" class="input_1"></input> % <span id="rotten_tomato_between" 
+                                  class="content_off">AND <input type="number" id="rotten_tomato_input_2" class="input_2"></input> %</span>
+                                </td>
+                            </tr>
+                            <tr class="off qualifier_with_list" id="Title">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="title_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="title_label">Title</td>
+                                <td id="title_content" class="content_off">
+                                  CONTAINS
+                                  <select name="title_q_1"  class="q_1">
+                                    <option value="all" label="all of">ALL OF</option>
+                                    <option value="none" label="none of">NONE OF</option>
+                                    <option value="any" label="any of">ANY OF</option>
+                                  </select>
+                                  THE FOLLOWING WORDS OR PHRASES
+                                  <input type="text" id="title_list_input" class="list_input"></input>
+                                </td>
+                            </tr>
+                            <tr class="off qualifier_with_list" id="Writer">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="writers_switch">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </td>
+                                <td id="writers_label">Writers</td>
+                              <td id="writers_content" class="content_off">
+                                  CONTAINS
+                                  <select name="writer_q_1"  class="q_1">
+                                    <option value="all" label="all of">ALL OF</option>
+                                    <option value="none" label="none of">NONE OF</option>
+                                    <option value="any" label="any of">ANY OF</option>
+                                  </select>
+                                  THE FOLLOWING WRITERS
+                                  <input type="text" id="writer_list_input" class="list_input"></input>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+            <br/>
+            <div class="row generate_section">
+              ORDER COLUMNS BY 
+              <select data-placeholder="-------" name="order_by" id="order_by" >
+                <option value="" selected>--OPTIONAL--</option>
+                <option value="actors" label="Actor"></option>
+                <option value="awards" label="Awards"></option>
+                <option value="boxoffice" label="Box Office Earnings"></option>
+                <option value="country" label="Country"></option>
+                <option value="dvd" label="DVD Release Date"></option>
+                <option value="director" label="Directors"></option>
+                <option value="genre" label="Genre"></option>
+                <option value="imdbrating" label="IMDB Rating"></option>
+                <option value="imdbvotes" label="IMDB Votes"></option>
+                <option value="language" label="Language"></option>
+                <option value="metascore" label="Metascore"></option>
+                <option value="plot" label="Plot"></option>
+                <option value="produced" label="Produced By"></option>
+                <option value="rated" label="Rated"></option>
+                <option value="released" label="Release Date"></option>
+                <option value="runtime" label="Runtime"></option>
+                <option value="title" label="Title"></option>
+                <option value="type" label="Type (movie, show, or episode)"></option>
+                <option value="writer" label="Writer"></option>
+              </select>
+            </div>
+            <div class=" row generate_section">
+                <p>LIMIT BY <input id="limit" name="limit" type="number" value="1000"> ENTRIES</p>
+            </div>
+            <div class=" row generate_section">
+              <button id="generate_query">
+                Generate Query
+              </button>
+            </div>
+            <div class="row generate_section content_off">
+              <form action="/sendquery" method="POST">
+                  <textarea id="generated_query" name="sql_query"></textarea>
+                  <br/>
+                  <button>Send Query</button>
+              </form>
+            </div>
         </div>
-        <br/>
-        <div class="generate_section">
-          <button id="generate_query">
-            Generate Query
-          </button>
-        </div>
-        <div class="generate_section content_off">
-          <form >
-              <textarea id="generated_query" name="sql_query"></textarea>
-              <br/>
-              <button id="send_query">Send Query</button>
-          </form>
-        </div>
-        <br>
-        </div>
-      </div>
     </body>
 </html>
 
